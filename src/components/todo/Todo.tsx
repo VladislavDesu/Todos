@@ -2,43 +2,59 @@ import React, {FC, useEffect, useState} from "react";
 import cl from "./Todo.module.scss";
 import List from "@components/list/List";
 import {ITodo} from "@/types/types";
+import Form from "@components/form/Form";
+import Tabs from "@components/tabs/Tabs";
 
 const Todo: FC = () => {
-    const [todoInput, setTodoInput] = useState<string>("");
     const [todos, setTodos] = useState<Array<ITodo>>([]);
-    const [todosCompleted, setTodosCompleted] = useState<Array<ITodo>>([]);
+    const [todosIsNotCompleted, setTodosIsNotCompleted] = useState<Array<ITodo>>([]);
+    const [todosIsCompleted, setTodosIsCompleted] = useState<Array<ITodo>>([]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setTodoInput(e.target.value);
+    const removeTodo = (todoID: number): void => {
+        setTodos(todos.filter(todo => todo.id !== todoID));
     };
 
-    const addTodo = (e: React.FormEvent<HTMLFormElement>): void => {
+    const completeTodo = (todoID: number, completed: boolean): void => {
+        const newTodos = todos.map(todo => {
+            if (todo.id === todoID) {
+                todo.completed = completed;
+            }
+
+            return todo;
+        });
+
+        setTodos(newTodos);
+    };
+
+    const clearCompleted = (e: React.MouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
-
-        if (todoInput.length) {
-            setTodos(todos => [...todos, {
-                id: todos.length,
-                completed: false,
-                text: todoInput,
-            }]);
-
-            setTodoInput("");
-        }
+        setTodos([...todosIsNotCompleted]);
     };
+
+    useEffect(() => {
+        const filteredIsNotCompleted = todos.filter(todo => !todo.completed);
+        const filteredIsCompleted = todos.filter(todo => todo.completed);
+        setTodosIsNotCompleted(filteredIsNotCompleted);
+        setTodosIsCompleted(filteredIsCompleted);
+    }, [todos]);
 
     return (
         <div className={cl.todo}>
-            <form onSubmit={addTodo}>
-                <input className={cl.input} value={todoInput} onChange={handleChange} placeholder="Enter your Todo..."
-                       type="text"/>
-            </form>
+            <Form setTodos={setTodos}/>
 
             {
                 todos.length !== 0 ? <>
-                    <List todos={todos}/>
+                    <List complete={completeTodo} remove={removeTodo} todos={todos}/>
 
                     <div className={cl.bottom}>
-                        <span>{todosCompleted.length} items left</span>
+                        <span>{todosIsNotCompleted.length} items left</span>
+                        <Tabs/>
+
+                        {
+                            todosIsCompleted.length !== 0
+                                ? <button onClick={clearCompleted} className={cl.clear}>Clear completed</button>
+                                : null
+                        }
                     </div>
                 </> : null
             }

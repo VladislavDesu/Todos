@@ -5,13 +5,15 @@ import Item from "@components/list/Item";
 
 interface ListProps {
     todos: Array<ITodo>,
+    remove: (id: number) => void
+    complete: (id: number, completed: boolean) => void
 }
 
-const List: FC<ListProps> = ({todos}) => {
+const List: FC<ListProps> = ({todos, remove, complete}) => {
     return (
         <ul className={cl.list}>
             {
-                todos.map(todo => <Item key={todo.id} todo={todo}/>)
+                todos.map(todo => <Item complete={complete} remove={remove} key={todo.id} todo={todo}/>)
             }
         </ul>
     );

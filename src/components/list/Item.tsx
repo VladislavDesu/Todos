@@ -1,4 +1,4 @@
-import React, {Dispatch, FC, SetStateAction, useState} from "react";
+import React, {FC, useState} from "react";
 import cl from "@components/list/List.module.scss";
 import {ITodo} from "@/types/types";
 
@@ -25,7 +25,8 @@ const Item: FC<ItemProps> = ({todo, remove, complete}) => {
     return (
         <li className={cl.item}>
             <label className={cl.checkbox} aria-label="Custom Checkbox">
-                <input className="visible-hidden" onChange={(e) => onChange(e, todo.id)} checked={isChecked} type="checkbox"/>
+                <input className="visible-hidden" onChange={(e) => onChange(e, todo.id)} checked={isChecked}
+                       type="checkbox"/>
                 <span aria-label="checkbox indicator"/>
             </label>
             <span className={textClass}>{todo.text}</span>

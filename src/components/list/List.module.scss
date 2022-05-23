@@ -20,6 +20,16 @@ input[type="checkbox"] {
   }
 }
 
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  font-size: 40px;
+  line-height: 48px;
+  border-bottom: 1px solid rgba($black, 0.2);
+}
+
 .checkbox {
   position: relative;
   width: 34px;

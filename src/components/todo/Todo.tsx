@@ -9,6 +9,9 @@ const Todo: FC = () => {
     const [todos, setTodos] = useState<Array<ITodo>>([]);
     const [todosIsNotCompleted, setTodosIsNotCompleted] = useState<Array<ITodo>>([]);
     const [todosIsCompleted, setTodosIsCompleted] = useState<Array<ITodo>>([]);
+    const [current, setCurrent] = useState<number>(0);
+
+    const TodosList: Array<Array<ITodo>> = [todos, todosIsNotCompleted, todosIsCompleted];
 
     const removeTodo = (todoID: number): void => {
         setTodos(todos.filter(todo => todo.id !== todoID));
@@ -44,12 +47,11 @@ const Todo: FC = () => {
 
             {
                 todos.length !== 0 ? <>
-                    <List complete={completeTodo} remove={removeTodo} todos={todos}/>
+                    <List complete={completeTodo} remove={removeTodo} todos={TodosList[current]}/>
 
                     <div className={cl.bottom}>
                         <span>{todosIsNotCompleted.length} items left</span>
-                        <Tabs/>
-
+                        <Tabs changeList={setCurrent}/>
                         {
                             todosIsCompleted.length !== 0
                                 ? <button onClick={clearCompleted} className={cl.clear}>Clear completed</button>
